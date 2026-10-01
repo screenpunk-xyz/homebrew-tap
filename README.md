@@ -1,63 +1,51 @@
 # Screenpunk CLI Homebrew tap
 
-This cask reuses the notarized, stapled Apple-silicon CLI 1.0.0 DMG without
-changing its signed payload. Homebrew owns the downloaded image in its Caskroom
-and the `screenpunk-setup` command. The Screenpunk installer remains the only
-owner of the per-user runtime, launchers, and LaunchAgent. No Homebrew hook
-starts or stops the service, deletes user state, or bypasses the install plan.
-**This is a Homebrew bootstrap for Screenpunk's own installer, not a fully
-Homebrew-managed runtime.** `brew install` alone does not activate the CLI or
-service.
+CLI 1.0.1 is published with Apple notarization and a validated staple. The public download matches SHA-256 `615ca4784eff283fc843648dc43a8d3f261c94bc0512deb378d5fd468b807a19`.
 
-The cask is published in `screenpunk-xyz/homebrew-tap`. The matching release asset `Screenpunk-CLI-1.0.0-arm64.dmg` is available under tag
-`cli-v1.0.0` in that same repository. The hosted artifact must retain SHA-256
-`a787684791309d0b939df0f9957d18bacf376cb3718ef1361585eba2a18deb60`.
-The cask uses Homebrew's `command_wrapper` stanza and requires Homebrew 7.0 or
-newer. It targets Apple-silicon macOS 14 or newer.
-
-Run these Studio commands from the
-same macOS account, without `sudo`:
+Install on Apple silicon with macOS14+
+and standard /opt/homebrew, as the normal user without sudo:
 
 ```sh
-brew --version # Homebrew 7.0 or newer is required
-brew tap screenpunk-xyz/tap
-brew install --cask screenpunk-xyz/tap/screenpunk-cli
-screenpunk-setup
-~/.local/bin/screenpunk doctor
-~/.local/bin/screenpunk service status
+brew tap screenpunk-xyz/tap https://github.com/screenpunk-xyz/homebrew-tap
+brew update
+brew install --cask screenpunk-cli
+screenpunk --version
+screenpunk setup
+screenpunk doctor
+screenpunk service status
+screenpunk agent config --client codex
 ```
 
-`screenpunk-setup` runs the signed DMG's installer from Homebrew's staged
-folder. It displays the authenticated install plan, then asks for the exact
-`Confirmation` token. Run setup as the same macOS account that ran
-`brew install`: the staged release directory is private to that account
-(mode `0700`), and release verification requires matching ownership. Use
-that account for staged upgrades and setup as well. This bootstrap does not
-provide setup for other accounts sharing a Homebrew prefix. Xcode is not
-required.
-Keep `~/.local/bin` on `PATH` if bare `screenpunk` commands are
-desired. Setup does not configure third-party agents automatically.
+The cask directly links screenpunk and screenpunk-mcp. The first setup/workspace
+request or MCP invocation prepares the verified bundled offline authoring kit
+and starts the owned user LaunchAgent. No screenpunk-setup command, separate
+installer, private software copy, or ~/.local/bin PATH edit is required.
+Agent configuration is emitted for review; user configuration is not edited.
+Pairing and deployment retain their human approval steps.
 
-An upgrade stages a new cask version but leaves the selected user runtime
-alone. Run `screenpunk-setup` after reviewing a staged upgrade. The Screenpunk
-installer retains the prior version for rollback. Avoid `brew upgrade --greedy`
-as an assumption that the user service has been upgraded; verify with
-`~/.local/bin/screenpunk doctor` and `service status` after setup.
+Use the same macOS account to install and use this release. Shared multi-account
+prefixes, nonstandard Homebrew prefixes, Intel Macs, and macOS before14 are not
+supported by this artifact. No Xcode or Screenpunk GUI app is required.
 
-To remove the per-user runtime, run `~/.local/bin/screenpunk uninstall plan`,
-review the retained data and GUI consumers, then run
-`~/.local/bin/screenpunk uninstall apply TOKEN` with the displayed token.
-Afterward, `brew uninstall --cask screenpunk-cli` removes the staged image and
-setup command. Reversing that order only removes Brew-owned files; the selected
-user runtime remains available for explicit uninstallation. Workspaces,
-external projects, machine-local state, and agent configuration are preserved
-by the Screenpunk uninstaller unless separately handled by the user.
+```sh
+brew upgrade --cask screenpunk-cli
+brew uninstall --cask screenpunk-cli
+```
 
-This is an Apple-silicon macOS 14+ CLI release. It does not install or replace
-the separate Mac GUI test app, and it does not supply that app's new
-approval/control path.
+Both stop the exact verified service before software removal. Upgrade starts the
+new service on next use. Workspace sources, external projects, machine state,
+installed kits, and Keychain entries remain. Keep agent configuration only while
+the CLI is installed; remove its Screenpunk entry manually if no longer wanted.
 
-The notarized image passed release verification, read-only installation
-planning, a network-denied fresh build, and an isolated full offline-kit
-import on the packaging Mac. A clean Studio installation and Homebrew install
-from the hosted release asset have not yet been tested.
+If activation fails, inspect `screenpunk service logs` and
+`launchctl print gui/$(id -u)/com.screenpunk.workbench`, then retry
+`screenpunk service start` after resolving the reported cause. If Brew removal
+is interrupted after deactivation, retry the Brew operation; a successful
+`brew reinstall --cask screenpunk-cli` rearms that package for first use.
+An uncertain or mismatched running broker blocks removal while software remains.
+
+The previous 1.0.0 Studio test left a failed legacy installation. The separately
+reviewed reset script applies only to the user-authorized disposable generator
+account on that Studio; do not use it as general uninstall instructions.
+
+This is a testing release. Source review, automated tests and isolated Homebrew extraction checks pass. Clean Studio activation, reconnect, upgrade and removal qualification remain pending.
