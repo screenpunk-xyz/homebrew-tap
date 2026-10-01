@@ -1,6 +1,6 @@
 # Screenpunk CLI Homebrew tap
 
-CLI 1.0.1 is published with Apple notarization and a validated staple. The public download matches SHA-256 `615ca4784eff283fc843648dc43a8d3f261c94bc0512deb378d5fd468b807a19`.
+CLI 1.0.2 is published with Apple notarization and a validated staple. The public download matches SHA-256 `2a50c732bbff31ab330b1dd589f601b270db9216be8b641ed6e8b039f40c3749`.
 
 Install on Apple silicon with macOS14+
 and standard /opt/homebrew, as the normal user without sudo:
@@ -49,3 +49,18 @@ reviewed reset script applies only to the user-authorized disposable generator
 account on that Studio; do not use it as general uninstall instructions.
 
 This is a testing release. Source review, automated tests and isolated Homebrew extraction checks pass. Clean Studio activation, reconnect, upgrade and removal qualification remain pending.
+
+## Retry an existing 1.0.1 Studio installation
+
+Keep state and Keychain intact; do not run the old reset script. Run separately, without sudo:
+
+```sh
+brew update
+brew upgrade --cask screenpunk-xyz/tap/screenpunk-cli
+screenpunk --version
+screenpunk service start
+screenpunk doctor
+screenpunk service status
+```
+
+Confirm version 1.0.2 before starting the service. Stop and retain output on any error.
