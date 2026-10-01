@@ -1,8 +1,7 @@
 cask "screenpunk-cli" do
-  version "1.0.0"
-  sha256 "a787684791309d0b939df0f9957d18bacf376cb3718ef1361585eba2a18deb60"
+  version "1.0.1"
+  sha256 "615ca4784eff283fc843648dc43a8d3f261c94bc0512deb378d5fd468b807a19"
 
-  # Publish this exact stapled DMG at this tag before making the cask public.
   url "https://github.com/screenpunk-xyz/homebrew-tap/releases/download/cli-v#{version}/Screenpunk-CLI-#{version}-arm64.dmg"
   name "Screenpunk CLI"
   desc "Offline-first Screenpunk CLI, MCP server, and user service"
@@ -11,26 +10,34 @@ cask "screenpunk-cli" do
   depends_on arch: :arm64
   depends_on macos: :sonoma
 
-  # Brew owns only the staged distribution and this command. The signed
-  # Screenpunk installer owns its per-user runtime and service after review.
-  command_wrapper "screenpunk-setup",
-                  executable: "#{staged_path}/Install Screenpunk CLI.command"
+  # Vendor lifecycle commands need local broker/launchd IPC, which structured
+  # flight-step sandboxes prohibit. Rearm only clears a removal fence; no
+  # process is started and no kit or LaunchAgent is installed here.
+  installer script: {
+    executable: "#{staged_path}/Screenpunk CLI #{version}/bin/screenpunk",
+    args:       ["package", "rearm"],
+    sudo:       false,
+  }
+  binary "Screenpunk CLI #{version}/bin/screenpunk"
+  binary "Screenpunk CLI #{version}/bin/screenpunk-mcp"
+
+  # Uninstall scripts run before binary unlinking, including during upgrades.
+  # Failure aborts removal while the package is still available for diagnosis.
+  uninstall script: {
+    executable: "#{staged_path}/Screenpunk CLI #{version}/bin/screenpunk",
+    args:       ["package", "deactivate"],
+    sudo:       false,
+  }
 
   caveats <<~EOS
-    Homebrew stages the signed distribution and setup command; it does not
-    install or manage the selected Screenpunk user runtime or service.
+    Run `screenpunk setup` to choose or create your workspace. The first
+    service request prepares the bundled offline kit and starts the user
+    service. No additional installer or private software copy is needed.
 
-    Run `screenpunk-setup` as the same macOS account that installed this cask,
-    without sudo. The staged release is private to that account and its
-    ownership is verified. This bootstrap does not provide setup for other
-    accounts sharing a Homebrew prefix. Review the installation plan and enter
-    its exact Confirmation token. Setup installs the verified CLI into
-    ~/.local/bin and registers a per-user service. Add ~/.local/bin to PATH if needed.
-
-    `brew upgrade --cask screenpunk-cli` stages a new release; run
-    `screenpunk-setup` again to review and apply it. Before removing the
-    per-user runtime, run `~/.local/bin/screenpunk uninstall plan`, then
-    `~/.local/bin/screenpunk uninstall apply TOKEN`. `brew uninstall --cask
-    screenpunk-cli` removes only Brew's staged image and setup command.
+    Use the same macOS account that installed this cask, without sudo.
+    This Apple-silicon release supports Homebrew at /opt/homebrew.
+    `brew upgrade --cask screenpunk-cli` and `brew uninstall --cask
+    screenpunk-cli` stop the verified package service before removing files.
+    User data, workspaces, installed kits, and Keychain entries are preserved.
   EOS
 end
