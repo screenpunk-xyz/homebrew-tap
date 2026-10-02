@@ -1,6 +1,6 @@
 cask "screenpunk-cli" do
-  version "1.0.2"
-  sha256 "2a50c732bbff31ab330b1dd589f601b270db9216be8b641ed6e8b039f40c3749"
+  version "1.0.3"
+  sha256 "5c8c3926f3ac37330844f277a64984e524ed38290e5543973b66c550086cc094"
 
   url "https://github.com/screenpunk-xyz/homebrew-tap/releases/download/cli-v#{version}/Screenpunk-CLI-#{version}-arm64.dmg"
   name "Screenpunk CLI"
