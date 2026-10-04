@@ -1,6 +1,6 @@
 cask "screenpunk-cli" do
-  version "1.0.3"
-  sha256 "5c8c3926f3ac37330844f277a64984e524ed38290e5543973b66c550086cc094"
+  version "1.0.5"
+  sha256 "af3f36c82f16e2bc01eb6f82ab5149cc72bd3f64d56e9368636baa18e70f1c98"
 
   url "https://github.com/screenpunk-xyz/homebrew-tap/releases/download/cli-v#{version}/Screenpunk-CLI-#{version}-arm64.dmg"
   name "Screenpunk CLI"
@@ -38,6 +38,16 @@ cask "screenpunk-cli" do
     This Apple-silicon release supports Homebrew at /opt/homebrew.
     `brew upgrade --cask screenpunk-cli` and `brew uninstall --cask
     screenpunk-cli` stop the verified package service before removing files.
-    User data, workspaces, installed kits, and Keychain entries are preserved.
+    Active jobs or Screenpunk GUI consumers prevent removal. Let jobs finish,
+    quit the GUI, and retry the Brew operation. User data, workspaces,
+    installed kits, and Keychain entries are preserved.
+
+    If a Brew operation was interrupted, retry it. Reinstalling through
+    `brew reinstall --cask screenpunk-cli` rearms a retained package.
+    A running 1.0.2 or 1.0.3 service needs the documented one-time
+    idle service stop before its old removal hook can complete.
+
+    This is a Homebrew testing release. Studio native upgrade validation
+    is pending; signed/static/private-resource checks have passed.
   EOS
 end
