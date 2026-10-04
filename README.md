@@ -37,9 +37,7 @@ Before upgrading require metadata version 1.0.6, the final checksum above and a 
 
 1.0.6 corrects pairing-response decoding, distinguishes stale source and build-head conflicts, and reports a retained plan with no admitted deployment operation as `not-admitted`. Unknown plans and storage failures remain errors. Before applying a reviewed plan, reconcile any existing operation and use the exact current review, authorization context and stable idempotency key.
 
-## Older installations and removal
-
-A running 1.0.2 or 1.0.3 service has an immutable old removal hook that needs a one-time supported idle stop before upgrade. Confirm fresh owned ready service identity/home/PID, idle lifecycle and GUI absence; then run `screenpunk --json --no-input service stop`. Confirm the exact owned LaunchAgent has no running PID before Brew upgrade. If the stop or old hook fails, retain state and output for diagnosis.
+## Removal and recovery
 
 The current removal guard reserves idle admission and refuses active jobs or GUI consumers without cancelling jobs. Let work finish, quit the GUI and retry. Failed native absence proof reopens admission. Removal retains workspaces, installed kits, Controller data, catalog history and Keychain entries. Interrupted removal uses supported retry/reinstall; `brew reinstall --cask screenpunk-xyz/tap/screenpunk-cli` rearms the retained package.
 

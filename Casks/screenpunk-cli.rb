@@ -44,8 +44,6 @@ cask "screenpunk-cli" do
 
     If a Brew operation was interrupted, retry it. Reinstalling through
     `brew reinstall --cask screenpunk-cli` rearms a retained package.
-    A running 1.0.2 or 1.0.3 service needs the documented one-time
-    idle service stop before its old removal hook can complete.
 
     This is a Homebrew testing release. Studio native upgrade validation
     is pending; signed/payload checks have passed.
