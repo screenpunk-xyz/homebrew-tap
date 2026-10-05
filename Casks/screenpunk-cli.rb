@@ -1,6 +1,6 @@
 cask "screenpunk-cli" do
-  version "1.0.6"
-  sha256 "2c62b35a13086727e06714e212e7c2857a4d6380b36f277037834113bd77ed08"
+  version "1.0.7"
+  sha256 "910c7f332d96e7d0dbef12afad3315d2977ea2c71e69e78ddfdce0f91baf9e40"
 
   url "https://github.com/screenpunk-xyz/homebrew-tap/releases/download/cli-v#{version}/Screenpunk-CLI-#{version}-arm64.dmg"
   name "Screenpunk CLI"
@@ -44,6 +44,9 @@ cask "screenpunk-cli" do
 
     If a Brew operation was interrupted, retry it. Reinstalling through
     `brew reinstall --cask screenpunk-cli` rearms a retained package.
+
+    Use `screenpunk status` for local release/service/workspace and cached
+    device status. It does not start the service or probe devices.
 
     This is a Homebrew testing release. Studio native upgrade validation
     is pending; signed/payload checks have passed.
