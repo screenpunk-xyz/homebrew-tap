@@ -13,9 +13,9 @@ screenpunk agent config --client codex
 
 For an existing installation, let jobs finish and quit Screenpunk GUI consumers, then run `brew upgrade --cask screenpunk-xyz/tap/screenpunk-cli`. Confirm `brew list --cask --versions screenpunk-cli` reports 1.0.8. Use the same installing account without sudo. No Xcode or Screenpunk GUI is required.
 
-The cask links screenpunk and screenpunk-mcp. First service use prepares the authenticated offline authoring kit and starts the owned user LaunchAgent. `screenpunk status --json` reports installed release, service, broker, workspace and cached device observations without starting the service or probing devices. Internal `screenpunk --version` is not the Homebrew package version.
+The cask links screenpunk and screenpunk-mcp. First service use prepares the authenticated offline authoring kit and starts the owned user LaunchAgent. `screenpunk status --json` reports installed release, service, broker, workspace and cached device observations without starting the service or probing devices.
 
-1.0.8 adds durable preference authoring guidance, a React preference hook and examples in the bundled 1.0.1 kit; local HTML policy diagnostics; fractional brightness decoding; and capacity for the two authenticated offline kits. Dashboard preferences are device-local and private. Same-ID updates and relaunch should preserve them; removal, reset or confirmed disconnect can erase them. Native persistence still requires Studio/device acceptance.
+1.0.8 adds durable preference authoring guidance, a React preference hook and examples in the bundled 1.0.1 kit; local HTML policy diagnostics; fractional brightness decoding; and capacity for the two authenticated offline kits. Dashboard preferences are device-local and private. Same-ID updates and relaunch should preserve them; app deletion, device reset or confirmed Disconnect can erase them. Native persistence still requires Studio/device acceptance.
 
 Homebrew first runs the installed version's uninstall hook. On a guarded refusal, retain the complete error and fresh status for diagnosis. Removal retains workspaces, pairing, Controller data, kits/catalog and Keychain. Supported reinstall rearms interrupted removal. Human chat approval of the exact reviewed deployment plan is relayed through MCP; changed or expired plans require fresh approval.
 
